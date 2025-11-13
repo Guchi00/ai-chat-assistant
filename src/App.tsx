@@ -1,7 +1,11 @@
-import "./App.css";
+import Chatboard from "./components/Chatboard";
 
 function App() {
-  return <></>;
+  return (
+    <>
+      <Chatboard />
+    </>
+  );
 }
 
 export default App;

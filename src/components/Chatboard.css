@@ -1,0 +1,34 @@
+.container {
+  width: 700px;
+  height: 100vh;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding-top: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 30px;
+}
+
+.user_actions {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.user_actions .prompt {
+  height: 80px;
+  width: 100%;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-top: 10px;
+  outline: none;
+}
+
+.user_actions button {
+  height: 40px;
+  width: 100px;
+  margin-top: 15px;
+}
