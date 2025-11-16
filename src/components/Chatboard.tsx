@@ -44,11 +44,22 @@ const Chatboard = () => {
     setLoading(true);
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({
+        model: "gemini-2.0-flash",
+      });
 
-      const prompt = `You are a helpful career advisor specialised in software engineering careers. Be encouraging, specific and actionable in your advice. Formate your response with clear sections and bullent points where appropraite. Keep responses concise but informative. User question: ${userMessage.content} `;
+      const prompt = `You are an expert career mentor focused on software engineering paths.
+      Respond with:
+      - A short, empathetic intro (1–2 sentences).
+      - Section headings using **bold**.
+      - Bullet points for steps, lists, or recommendations.
+      - Very minimal bold emphasis inside paragraphs.
+      - No overuse of formatting symbols.
+      Make the tone supportive, professional, and actionable. User question: ${userMessage.content} `;
+
       const result = await model.generateContent(prompt);
-      const response = await result.response;
+
+      const response = result.response;
       const aiResponse = response.text();
 
       const aiMessage: Message = {
@@ -58,13 +69,17 @@ const Chatboard = () => {
       };
       setMessages((prevMes) => [...prevMes, aiMessage]);
     } catch (error) {
-      console.error("Error", error);
+      console.log("Error:", error);
+
+      const aiErrorResponse =
+        "❌ Sorry, I'm having trouble responding right now. Please try again in a moment.";
+
       const errorMessage: Message = {
         role: "assistant",
-        content:
-          "❌ Sorry, I encountered an error. Please check your API key in the .env file.",
+        content: aiErrorResponse,
         timestamp: new Date(),
       };
+
       setMessages((prevMes) => [...prevMes, errorMessage]);
     } finally {
       setLoading(false);
@@ -88,13 +103,11 @@ const Chatboard = () => {
   return (
     <div className="chatbot_container">
       <div className="chatbot_header">
-        {/* <div className="header_content"> */}
         <h1 className="header_title">
           <span>🤖</span>
           Career AI Assistant
         </h1>
         <p className="header_subtitle">Powered by Google Gemini AI</p>
-        {/* </div> */}
       </div>
 
       <div className="messages_container">
@@ -176,9 +189,6 @@ const Chatboard = () => {
               {loading ? "⏳" : "Send"}
             </button>
           </div>
-          {/* <p className="input-hint">
-            Press Enter to send, Shift+Enter for new line
-          </p> */}
         </div>
       </div>
     </div>
