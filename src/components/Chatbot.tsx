@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import "./Chatboard.css";
+import "./Chatbot.css";
 
 interface Message {
   role: "user" | "assistant";
@@ -8,7 +7,7 @@ interface Message {
   timestamp: Date;
 }
 
-const Chatboard = () => {
+export const Chatbot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -20,8 +19,6 @@ const Chatboard = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -42,41 +39,37 @@ const Chatboard = () => {
     setMessages((prevMes) => [...prevMes, userMessage]);
     setInput("");
     setLoading(true);
-
     try {
-      const model = genAI.getGenerativeModel({
-        model: "gemini-2.0-flash",
+      const response = await fetch("/.netlify/functions/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userMessage.content,
+        }),
       });
 
-      const prompt = `You are an expert career mentor focused on software engineering paths.
-      Respond with:
-      - A short, empathetic intro (1–2 sentences).
-      - Section headings using **bold**.
-      - Bullet points for steps, lists, or recommendations.
-      - Very minimal bold emphasis inside paragraphs.
-      - No overuse of formatting symbols.
-      Make the tone supportive, professional, and actionable. User question: ${userMessage.content} `;
+      if (!response.ok) {
+        throw new Error(`Chat request failed: ${response.status}`);
+      }
 
-      const result = await model.generateContent(prompt);
-
-      const response = result.response;
-      const aiResponse = response.text();
+      const data: { reply: string } = await response.json();
 
       const aiMessage: Message = {
         role: "assistant",
-        content: aiResponse,
+        content: data.reply,
         timestamp: new Date(),
       };
+
       setMessages((prevMes) => [...prevMes, aiMessage]);
     } catch (error) {
-      console.log("Error:", error);
-
-      const aiErrorResponse =
-        "❌ Sorry, I'm having trouble responding right now. Please try again in a moment.";
+      console.error("Chat error:", error);
 
       const errorMessage: Message = {
         role: "assistant",
-        content: aiErrorResponse,
+        content:
+          "❌ Sorry, I'm having trouble responding right now. Please try again in a moment.",
         timestamp: new Date(),
       };
 
@@ -99,6 +92,8 @@ const Chatboard = () => {
     "What skill should I learn?",
     "How do I find my next job",
   ];
+
+  console.error("Gemini API error:", Error);
 
   return (
     <div className="chatbot_container">
@@ -194,4 +189,3 @@ const Chatboard = () => {
     </div>
   );
 };
-export default Chatboard;

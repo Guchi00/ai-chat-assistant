@@ -1,9 +1,9 @@
-import Chatboard from "./components/Chatboard";
+import { Chatbot } from "./components/Chatbot";
 
 function App() {
   return (
     <>
-      <Chatboard />
+      <Chatbot />
     </>
   );
 }
