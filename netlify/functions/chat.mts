@@ -25,15 +25,15 @@ export default async (request: Request) => {
     const ai = new GoogleGenAI({ apiKey });
 
     const prompt = `You are an expert career mentor focused on software engineering paths.
-Respond with:
-- A short, empathetic intro (1–2 sentences).
-- Section headings using **bold**.
-- Bullet points for steps, lists, or recommendations.
-- Very minimal bold emphasis inside paragraphs.
-- No overuse of formatting symbols.
-Make the tone supportive, professional, and actionable.
+    Respond with:
+    - A short, empathetic intro (1–2 sentences).
+    - Section headings using **bold**.
+    - Bullet points for steps, lists, or recommendations.
+    - Very minimal bold emphasis inside paragraphs.
+    - No overuse of formatting symbols.
+    Make the tone supportive, professional, and actionable.
 
-User question: ${message}`;
+    User question: ${message}`;
 
     const result = await ai.models.generateContent({
       model: "gemini-3.8-flash",

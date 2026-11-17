@@ -4,18 +4,25 @@
   box-sizing: border-box;
 }
 
-canvas {
-  outline: none;
-}
-
-&:focus {
-  outline: none;
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 50px;
+  font-family: Inter, system-ui, sans-serif;
+  background: #0b1020;
+}
+
+button,
+textarea {
+  font-family: inherit;
+}
+
+button:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #a89bff;
+  outline-offset: 3px;
 }
